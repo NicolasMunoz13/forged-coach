@@ -1,0 +1,8 @@
+gradio>=4.44
+tensorflow-cpu>=2.15
+pillow>=10.0
+numpy>=1.26
+# Para convertir una foto real en silueta (interruptor "quitar fondo").
+# Si el build del Space va lento, puedes quitar estas dos y subir siempre siluetas.
+rembg>=2.0
+onnxruntime>=1.17

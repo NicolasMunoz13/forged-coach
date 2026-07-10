@@ -1,0 +1,44 @@
+{
+  "model_type": "1D (medidas)",
+  "img_size": 96,
+  "front_dir": "mask",
+  "side_dir": "mask_left",
+  "tabular_features": [
+    "m_waist",
+    "m_hip",
+    "m_chest",
+    "m_thigh",
+    "m_height",
+    "gen_female",
+    "gen_male"
+  ],
+  "numeric_cols": [
+    "m_waist",
+    "m_hip",
+    "m_chest",
+    "m_thigh",
+    "m_height"
+  ],
+  "scaler_mean": {
+    "m_waist": 90.32783508300781,
+    "m_hip": 103.0733871459961,
+    "m_chest": 102.16683959960938,
+    "m_thigh": 54.328861236572266,
+    "m_height": 172.19606018066406
+  },
+  "scaler_std": {
+    "m_waist": 13.316224098205566,
+    "m_hip": 9.873259544372559,
+    "m_chest": 11.275854110717773,
+    "m_thigh": 5.457945823669434,
+    "m_height": 9.579962730407715
+  },
+  "class_names": [
+    "Bajo peso",
+    "Normal",
+    "Sobrepeso",
+    "Obesidad"
+  ],
+  "needs_image": false,
+  "needs_tabular": true
+}

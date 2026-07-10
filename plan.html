@@ -1,0 +1,426 @@
+<title>FORGED · Multimodal Fitness Coach — Final Project Plan</title>
+<style>
+  :root {
+    /* neutrals biased toward the teal accent, not pure grey */
+    --bg: #0b1215;
+    --surface: #111b1f;
+    --surface-2: #16242a;
+    --line: #24363d;
+    --fg: #e8f0f2;
+    --muted: #8fa7af;
+    --primary: #2dd4bf;      /* teal */
+    --primary-deep: #0d9488;
+    --accent: #f5a524;       /* amber — phase markers only */
+    --good: #34d399;
+    --warn: #fbbf24;
+    --shadow: 0 1px 0 rgba(255,255,255,.03), 0 12px 30px -18px rgba(0,0,0,.7);
+    --maxw: 74ch;
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #f4f7f7;
+      --surface: #ffffff;
+      --surface-2: #eef4f4;
+      --line: #d7e2e2;
+      --fg: #10201f;
+      --muted: #567077;
+      --primary: #0f9c8c;
+      --primary-deep: #0d7d70;
+      --accent: #c9791a;
+      --good: #0f9c6a;
+      --warn: #b9770a;
+      --shadow: 0 1px 0 rgba(0,0,0,.02), 0 14px 34px -20px rgba(10,40,40,.35);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0b1215; --surface: #111b1f; --surface-2: #16242a; --line: #24363d;
+    --fg: #e8f0f2; --muted: #8fa7af; --primary: #2dd4bf; --primary-deep: #0d9488;
+    --accent: #f5a524; --good: #34d399; --warn: #fbbf24;
+    --shadow: 0 1px 0 rgba(255,255,255,.03), 0 12px 30px -18px rgba(0,0,0,.7);
+  }
+  :root[data-theme="light"] {
+    --bg: #f4f7f7; --surface: #ffffff; --surface-2: #eef4f4; --line: #d7e2e2;
+    --fg: #10201f; --muted: #567077; --primary: #0f9c8c; --primary-deep: #0d7d70;
+    --accent: #c9791a; --good: #0f9c6a; --warn: #b9770a;
+    --shadow: 0 1px 0 rgba(0,0,0,.02), 0 14px 34px -20px rgba(10,40,40,.35);
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 17px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  .display {
+    font-family: "Oswald", "Arial Narrow", system-ui, sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .02em;
+    line-height: 1.02;
+    text-wrap: balance;
+  }
+  .mono { font-family: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
+
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 24px; }
+  .col { max-width: var(--maxw); }
+
+  a { color: var(--primary); text-decoration: none; border-bottom: 1px solid color-mix(in srgb, var(--primary) 35%, transparent); }
+  a:hover { border-bottom-color: var(--primary); }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; border-radius: 2px; }
+
+  /* ---------- Hero ---------- */
+  header.hero {
+    border-bottom: 1px solid var(--line);
+    background:
+      radial-gradient(120% 90% at 100% 0%, color-mix(in srgb, var(--primary-deep) 22%, transparent) 0%, transparent 55%),
+      var(--surface);
+  }
+  .hero-inner { padding: 68px 24px 56px; max-width: 980px; margin: 0 auto; }
+  .eyebrow {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    text-transform: uppercase; letter-spacing: .22em; font-size: 12px;
+    color: var(--primary); margin: 0 0 20px;
+  }
+  h1.title { font-size: clamp(38px, 7vw, 74px); margin: 0 0 8px; }
+  h1.title .lo { color: var(--muted); display: block; font-size: clamp(20px, 3.4vw, 30px); letter-spacing: .04em; margin-top: 14px; }
+  .thesis { font-size: clamp(18px, 2.4vw, 22px); color: var(--fg); max-width: 60ch; margin: 22px 0 0; line-height: 1.5; }
+  .thesis b { color: var(--primary); font-weight: 600; }
+
+  .meta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 30px; }
+  .chip {
+    font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 12.5px;
+    color: var(--muted); background: var(--surface-2); border: 1px solid var(--line);
+    padding: 6px 12px; border-radius: 999px; letter-spacing: .02em;
+  }
+  .chip b { color: var(--fg); font-weight: 600; }
+
+  /* ---------- Sections ---------- */
+  section { padding: 56px 0; border-bottom: 1px solid var(--line); }
+  .kicker {
+    font-family: "JetBrains Mono", ui-monospace, monospace; text-transform: uppercase;
+    letter-spacing: .2em; font-size: 12px; color: var(--primary); margin: 0 0 14px;
+  }
+  h2 { font-size: clamp(26px, 4.4vw, 40px); margin: 0 0 18px; }
+  h3 { font-size: 20px; margin: 0 0 8px; letter-spacing: .01em; }
+  p { margin: 0 0 16px; }
+  p.col, ul.col, .lead { max-width: var(--maxw); }
+  .lead { color: var(--muted); font-size: 18px; }
+  strong { color: var(--fg); }
+  em { color: var(--primary); font-style: normal; }
+
+  ul.clean { list-style: none; padding: 0; margin: 0; }
+  ul.clean li { position: relative; padding-left: 26px; margin-bottom: 12px; }
+  ul.clean li::before {
+    content: ""; position: absolute; left: 4px; top: 10px; width: 8px; height: 8px;
+    background: var(--primary); transform: rotate(45deg); border-radius: 1px;
+  }
+
+  /* ---------- Diagram ---------- */
+  .diagram-scroll { overflow-x: auto; padding: 6px 2px 14px; }
+  .diagram {
+    display: grid; gap: 14px; min-width: 640px;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: stretch;
+  }
+  .node {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+    padding: 16px 18px; box-shadow: var(--shadow);
+  }
+  .node .tag {
+    font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 11px;
+    text-transform: uppercase; letter-spacing: .16em; color: var(--muted);
+  }
+  .node .big { font-size: 16px; font-weight: 600; margin-top: 4px; color: var(--fg); }
+  .node .sub { font-size: 13.5px; color: var(--muted); margin-top: 4px; }
+  .node.io { border-color: color-mix(in srgb, var(--primary) 45%, var(--line)); }
+  .node.fuse { border-color: color-mix(in srgb, var(--accent) 55%, var(--line)); background: color-mix(in srgb, var(--accent) 8%, var(--surface)); }
+  .node.out { border-color: color-mix(in srgb, var(--primary) 60%, var(--line)); background: color-mix(in srgb, var(--primary) 10%, var(--surface)); }
+  .arrow { align-self: center; color: var(--primary); font-size: 22px; text-align: center; }
+  .span-3 { grid-column: 1 / -1; }
+  .flow-row { display: grid; grid-template-columns: 1fr auto 1fr; gap: 14px; align-items: stretch; }
+  .vstep { text-align: center; color: var(--muted); font-family: "JetBrains Mono", monospace; font-size: 20px; padding: 2px 0; }
+
+  /* ---------- Cards ---------- */
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; margin-top: 8px; }
+  .card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+    padding: 22px 22px 20px; box-shadow: var(--shadow);
+  }
+  .card.flag { border-left: 3px solid var(--warn); }
+  .card .lbl { font-family: "JetBrains Mono", monospace; font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--warn); margin-bottom: 8px; }
+  .card p:last-child { margin-bottom: 0; }
+  .verdict { display: inline-block; font-family: "JetBrains Mono", monospace; font-size: 12px; color: var(--good); border: 1px solid color-mix(in srgb, var(--good) 45%, var(--line)); border-radius: 999px; padding: 3px 11px; }
+
+  /* ---------- Timeline ---------- */
+  .timeline { display: grid; gap: 0; margin-top: 10px; }
+  .phase { display: grid; grid-template-columns: 68px 1fr; gap: 20px; padding: 22px 0; border-top: 1px solid var(--line); }
+  .phase:first-child { border-top: none; }
+  .phase .num { font-family: "Oswald", "Arial Narrow", sans-serif; font-weight: 700; font-size: 34px; color: var(--accent); line-height: 1; }
+  .phase .num small { display: block; font-family: "JetBrains Mono", monospace; font-size: 10px; letter-spacing: .12em; color: var(--muted); margin-top: 6px; text-transform: uppercase; }
+  .phase h3 { margin-bottom: 6px; }
+  .phase .maps { font-family: "JetBrains Mono", monospace; font-size: 12px; color: var(--primary); margin-top: 10px; }
+
+  /* ---------- Tables ---------- */
+  .table-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); }
+  table { border-collapse: collapse; width: 100%; min-width: 560px; font-size: 15px; }
+  caption { text-align: left; }
+  th, td { text-align: left; padding: 12px 16px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  thead th { background: var(--surface-2); font-family: "JetBrains Mono", monospace; font-size: 11.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:nth-child(even) td { background: color-mix(in srgb, var(--surface-2) 45%, transparent); }
+  td.num { font-variant-numeric: tabular-nums; }
+  .pill { font-family: "JetBrains Mono", monospace; font-size: 11px; padding: 2px 8px; border-radius: 6px; background: var(--surface-2); border: 1px solid var(--line); color: var(--muted); white-space: nowrap; }
+  .pill.free { color: var(--good); border-color: color-mix(in srgb, var(--good) 40%, var(--line)); }
+
+  /* ---------- Footer ---------- */
+  footer { padding: 46px 24px 60px; text-align: center; }
+  footer .sh { font-size: clamp(28px, 6vw, 52px); color: color-mix(in srgb, var(--primary) 80%, var(--fg)); }
+  footer .fine { color: var(--muted); font-size: 13px; margin-top: 10px; }
+
+  @media (max-width: 560px) {
+    body { font-size: 16px; }
+    .phase { grid-template-columns: 48px 1fr; gap: 14px; }
+    section { padding: 44px 0; }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    a, button { transition: border-color .15s ease, color .15s ease; }
+  }
+</style>
+
+<header class="hero">
+  <div class="hero-inner">
+    <p class="eyebrow">AI Bootcamp ED.5 · Proyecto Final</p>
+    <h1 class="title display">FORGED
+      <span class="lo">Multimodal Fitness Coach</span>
+    </h1>
+    <p class="thesis">Upload a photo, type three numbers, get a plan built for <b>your</b> body.
+      A deep-learning body analyzer and a RAG + fine-tuned LLM coach, wired into one flow —
+      the Deep Learning and LLM modules doing real work together.</p>
+    <div class="meta">
+      <span class="chip"><b>Deadline</b> · 30 Jul 2026, 12:00 CET</span>
+      <span class="chip"><b>Pass bar</b> · grade &gt; 6.0</span>
+      <span class="chip"><b>Format</b> · group · 15-min demo + Q&amp;A</span>
+      <span class="chip"><b>Cost</b> · 100% free tier</span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section>
+    <p class="kicker">The idea, in one line</p>
+    <h2 class="display">A coach that sees you, then talks to you</h2>
+    <p class="lead col">This is a follow-up of the FORGED landing you already built for the LLM module —
+      but instead of a generic RAG chatbot, the coach now starts from a real assessment of the
+      user's body composition and grounds every plan in it.</p>
+    <p class="col">The system does two AI jobs and joins them. First, a <em>deep-learning model</em>
+      estimates body composition from a photo <strong>fused</strong> with typed measurements
+      (height, weight, waist). Second, an <em>LLM coach</em> — retrieval-augmented and lightly
+      fine-tuned on real nutrition/fitness data — turns that estimate into a personalized nutrition
+      and training plan. Neither half is bolted on: the DL output is the LLM's input.</p>
+  </section>
+
+  <section>
+    <p class="kicker">Architecture</p>
+    <h2 class="display">One flow, both modules</h2>
+    <div class="diagram-scroll" role="img" aria-label="Data flow: photo and measurements feed a 2D CNN and a 1D tabular model, which fuse into a BMI band and body-composition category, which feed a RAG plus fine-tuned LLM coach that outputs a personalized plan.">
+      <div class="diagram">
+        <div class="node io"><span class="tag">Input A</span><div class="big">Body photo</div><div class="sub">Uploaded client-side, not stored on a server</div></div>
+        <div class="arrow" aria-hidden="true">↘</div>
+        <div class="node io"><span class="tag">Input B</span><div class="big">Height · weight · waist</div><div class="sub">Typed by the user</div></div>
+
+        <div class="node"><span class="tag">2D model</span><div class="big">CNN (transfer learning)</div><div class="sub">MobileNet / ResNet on the image</div></div>
+        <div class="arrow" aria-hidden="true">→</div>
+        <div class="node"><span class="tag">1D model</span><div class="big">Tabular MLP</div><div class="sub">On the measurements</div></div>
+
+        <div class="node fuse span-3"><span class="tag">Deep Learning module</span><div class="big">Early &amp; late fusion → BMI band + WHO category</div><div class="sub">The exact 1D + 2D + fusion technique from the HAM10000 practica, on a new dataset</div></div>
+
+        <div class="vstep span-3" aria-hidden="true">↓ passed as structured context ↓</div>
+
+        <div class="node out span-3"><span class="tag">LLM module</span><div class="big">RAG + QLoRA-tuned coach → personalized nutrition &amp; training plan</div><div class="sub">Retrieval over a real corpus, grounded in the user's estimated composition</div></div>
+      </div>
+    </div>
+    <p class="col" style="margin-top:22px"><strong>The demo moment:</strong> one upload + three numbers → a live, body-specific plan.
+      That single interaction is what shows both modules working, which is precisely what the
+      rubric's "demo + technical architecture" slide rewards.</p>
+  </section>
+
+  <section>
+    <p class="kicker">Honest reality-checks</p>
+    <h2 class="display">Two things to reframe before we build</h2>
+    <div class="cards">
+      <div class="card flag">
+        <div class="lbl">Reframe 1 · "Train an LLM"</div>
+        <h3>Don't train — retrieve &amp; adapt</h3>
+        <p>Training an LLM from scratch is infeasible (cost + data). What the course actually taught is
+          <strong>RAG</strong> (M19) and <strong>QLoRA fine-tuning</strong> (M14, the "Milei" notebook).</p>
+        <p><strong>Plan:</strong> RAG for factual accuracy + a QLoRA fine-tune on a real nutrition dataset as the
+          genuine "trained on real data" showcase. Both run on free Colab GPU.</p>
+      </div>
+      <div class="card flag">
+        <div class="lbl">Reframe 2 · "Overweight from a photo"</div>
+        <h3>Estimate, don't diagnose</h3>
+        <p>Single-photo body judgment is noisy and can be harmful if worded as a verdict. Real public
+          datasets exist (BodyM, 2DImage2BMI), and they pair images <em>with</em> measurements —
+          i.e. they're fusion problems.</p>
+        <p><strong>Plan:</strong> output an estimated BMI band + category with a visible
+          "estimate, not medical advice" disclaimer; accuracy comes from fusing the photo with the typed numbers.</p>
+      </div>
+    </div>
+    <p class="col" style="margin-top:24px"><span class="verdict">Verdict · the idea is strong</span>
+      &nbsp;It reuses a technique you've already proven (fusion) and an app you already own (FORGED),
+      and it joins your two favorite modules into one coherent product.</p>
+  </section>
+
+  <section>
+    <p class="kicker">Build plan</p>
+    <h2 class="display">Six phases</h2>
+    <div class="timeline">
+      <div class="phase">
+        <div class="num display">0<small>Setup</small></div>
+        <div>
+          <h3>Scope &amp; ethics</h3>
+          <ul class="clean col">
+            <li>Fork the FORGED app into the capstone repo; keep the landing, replace the coach flow.</li>
+            <li>Lock the framing: disclaimers, "estimate not diagnosis", photos processed client-side and not persisted.</li>
+            <li>Agree team roles (DL model / LLM / frontend / deploy).</li>
+          </ul>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="num display">1<small>DL model</small></div>
+        <div>
+          <h3>Body analyzer — the reused fusion technique</h3>
+          <ul class="clean col">
+            <li>Dataset: <strong>BodyM</strong> (primary) or <strong>2DImage2BMI</strong>. Compute BMI from height/weight; bin into WHO bands as labels.</li>
+            <li>Build all four models like the HAM10000 practica: 1D tabular MLP, 2D CNN (transfer learning), <strong>late fusion</strong>, <strong>early fusion</strong>.</li>
+            <li>Error analysis + hyperparameter notes (the practica rubric rewards this over raw accuracy).</li>
+            <li>Export best model to a Hugging Face Space (Gradio).</li>
+          </ul>
+          <p class="maps">maps to → Deep Learning · M4–M6 (CNN + fusion)</p>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="num display">2<small>LLM coach</small></div>
+        <div>
+          <h3>RAG + a real-data fine-tune</h3>
+          <ul class="clean col">
+            <li>RAG corpus from real sources: USDA FoodData Central, gym/exercise + fitness-QA datasets.</li>
+            <li>QLoRA fine-tune an open model (Gemma / Qwen) on a real dietary-recommendation dataset — the "trained on real data" headline.</li>
+            <li>Prompt contract: the coach receives the DL model's BMI band + category as structured context.</li>
+            <li>Add a RAG evaluation pass (RAGAs, M20) so you can defend answer quality in Q&amp;A.</li>
+          </ul>
+          <p class="maps">maps to → LLM · M14 (QLoRA) · M19 (RAG) · M20 (eval)</p>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="num display">3<small>Frontend</small></div>
+        <div>
+          <h3>Build the app UI</h3>
+          <ul class="clean col">
+            <li>Reuse the FORGED design system (CSS vars, Oswald/Inter, Goggins voice) — no restyle from zero.</li>
+            <li><strong>Assessment page:</strong> drag-and-drop photo upload + measurement form (height / weight / waist), with client-side validation and a clear "estimate, not medical advice" notice.</li>
+            <li><strong>Results view:</strong> BMI band + WHO category shown as a labeled gauge/badge, with the fusion confidence framed honestly.</li>
+            <li><strong>Coach view:</strong> chat UI that streams the plan; render the nutrition + training plan as structured cards, not a wall of text.</li>
+            <li>Loading / empty / error states for the Space calls (cold-starts happen on free tier).</li>
+            <li>Responsive + accessible (AA contrast, keyboard focus) — carry over the M9 acceptance criteria.</li>
+          </ul>
+          <p class="maps">maps to → reuse of the FORGED Next.js app · new Assessment + Coach flows</p>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="num display">4<small>Integrate</small></div>
+        <div>
+          <h3>Wire it together &amp; ship</h3>
+          <ul class="clean col">
+            <li>Connect the flow: form → DL Space → result → coach → rendered plan.</li>
+            <li>Define the API contract between frontend and each Space (request/response shapes).</li>
+            <li>Deploy web on Vercel; models on HF Spaces — your existing, free stack.</li>
+            <li>End-to-end smoke test the full upload-to-plan path before demo day.</li>
+          </ul>
+          <p class="maps">maps to → reuse of the FORGED capstone stack</p>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="num display">5<small>Present</small></div>
+        <div>
+          <h3>15-minute demo</h3>
+          <ul class="clean col">
+            <li>Architecture diagram → live upload-to-plan flow → reflection slide.</li>
+            <li>Prep answers on: fusion choice, why RAG + fine-tune, dataset limits, ethics.</li>
+            <li>Rehearse to time; the pitch is graded as much as the code.</li>
+          </ul>
+          <p class="maps">maps to → proyecto_final.pdf presentation rubric</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <p class="kicker">Data sources</p>
+    <h2 class="display">Real, public, free datasets</h2>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr><th scope="col">Dataset</th><th scope="col">Use</th><th scope="col">Size</th><th scope="col">Access</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>BodyM</strong></td><td>DL — image + measurements → BMI (primary)</td><td class="num">8,978 photos · 2,505 people</td><td><span class="pill free">public</span></td></tr>
+          <tr><td><strong>2DImage2BMI</strong></td><td>DL — backup image→BMI set</td><td class="num">4,189 images</td><td><span class="pill free">public / GitHub</span></td></tr>
+          <tr><td><strong>USDA FoodData Central</strong></td><td>RAG — nutrition facts corpus</td><td class="num">large</td><td><span class="pill free">public API</span></td></tr>
+          <tr><td><strong>onurSakar/GYM-Exercise</strong></td><td>RAG — exercise instructions</td><td class="num">—</td><td><span class="pill free">HF datasets</span></td></tr>
+          <tr><td><strong>hammamwahab/fitness-qa</strong></td><td>RAG / eval — fitness Q&amp;A</td><td class="num">—</td><td><span class="pill free">HF datasets</span></td></tr>
+          <tr><td><strong>issai/…Dietary_Recommendation</strong></td><td>Fine-tune — diet-plan instructions</td><td class="num">50 profiles</td><td><span class="pill free">HF datasets</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="col" style="margin-top:16px; color: var(--muted); font-size: 15px;">
+      Verify each dataset's license before use; BodyM and the HF sets are research/non-commercial —
+      fine for a bootcamp capstone, and worth stating on your ethics slide.</p>
+  </section>
+
+  <section>
+    <p class="kicker">Stack · everything on free tiers</p>
+    <h2 class="display">No paid infra, anywhere</h2>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr><th scope="col">Layer</th><th scope="col">Tool</th><th scope="col">Free how</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Model training</td><td>Google Colab (T4 GPU)</td><td><span class="pill free">free tier — enough for QLoRA + CNN</span></td></tr>
+          <tr><td>Model hosting</td><td>Hugging Face Spaces (Gradio)</td><td><span class="pill free">free tier</span></td></tr>
+          <tr><td>LLM generation</td><td>Google AI Studio / Groq free API, or the fine-tuned open model in-Space</td><td><span class="pill free">free API quota</span></td></tr>
+          <tr><td>Web app</td><td>Next.js 15 (existing FORGED app)</td><td><span class="pill free">open source</span></td></tr>
+          <tr><td>Web hosting</td><td>Vercel</td><td><span class="pill free">hobby tier</span></td></tr>
+          <tr><td>Vector store (RAG)</td><td>FAISS / Chroma (in-Space)</td><td><span class="pill free">open source, no server</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="col" style="margin-top:16px">Keep API keys as HF/Vercel secrets — never in the repo, matching the rule already in
+      the FORGED <span class="mono">CLAUDE.md</span>.</p>
+  </section>
+
+  <section>
+    <p class="kicker">Risks &amp; how we answer them</p>
+    <h2 class="display">What the instructors will probe</h2>
+    <ul class="clean col">
+      <li><strong>"Is a photo really predictive?"</strong> — Show the fusion ablation: image-only vs tabular-only vs fused. The typed numbers carry most of the signal; the photo adds context. Honesty here scores points.</li>
+      <li><strong>"Isn't this medical advice?"</strong> — Explicit disclaimer, WHO-band framing, no diagnosis language, non-commercial data. It's a fitness estimate, stated as such.</li>
+      <li><strong>"Where's the real data?"</strong> — Public datasets above + a real QLoRA fine-tune, with a RAGAs eval to back answer quality.</li>
+      <li><strong>"Free forever?"</strong> — Every layer is a documented free tier; note the trade-offs (Space cold-starts, API quotas) as known limits.</li>
+    </ul>
+  </section>
+
+</main>
+
+<footer>
+  <div class="display sh">Stay hard.</div>
+  <p class="fine">FORGED · Multimodal Fitness Coach — plan for KeepCoding AI Bootcamp ED.5 final project.
+    Estimates only, not medical advice.</p>
+</footer>

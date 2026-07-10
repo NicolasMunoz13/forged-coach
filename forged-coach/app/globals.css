@@ -1,0 +1,76 @@
+@import "tailwindcss";
+
+/* ============================================================
+   FORGED · paleta azul/teal (design-system.md) — Tailwind v4 CSS-first
+   ============================================================ */
+@theme inline {
+  --color-bg: #06121a;
+  --color-surface: #0e2630;
+  --color-surface-2: #13323e;
+  --color-primary: #14b8a6;
+  --color-primary-deep: #0d9488;
+  --color-accent: #38bdf8;
+  --color-fg: #eaf6f4;
+  --color-muted: #8fb0ad;
+  --color-line: #1c4350;
+  --color-danger: #f97362;
+
+  --font-display: var(--font-oswald), "Arial Narrow", sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* ---------- base ---------- */
+* {
+  border-color: var(--color-line);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  /* textura sutil tipo "noche de gimnasio" */
+  background-image:
+    radial-gradient(900px circle at 50% -10%, rgba(20, 184, 166, 0.12), transparent 60%),
+    radial-gradient(700px circle at 90% 10%, rgba(56, 189, 248, 0.08), transparent 55%);
+  background-attachment: fixed;
+}
+
+::selection {
+  background: var(--color-primary);
+  color: var(--color-bg);
+}
+
+/* ---------- tipografía display ---------- */
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: 0.01em;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  line-height: 1.02;
+}
+
+/* ---------- focus accesible ---------- */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ---------- helper: número fantasma de sección ---------- */
+.ghost-number {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1px var(--color-line);
+  opacity: 0.55;
+}
