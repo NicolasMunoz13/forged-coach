@@ -8,8 +8,10 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const maxDuration = 30;
 
-const EMBED_MODEL = "gemini-embedding-001";
-const CHAT_MODEL = "gemini-2.5-flash"; // mismo modelo que el proyecto FORGED del modulo LLM
+// Configurables por env (Vercel → Settings → Environment Variables) para poder
+// cambiar de modelo sin tocar el codigo cuando Google deprecie versiones.
+const EMBED_MODEL = process.env.GEMINI_EMBED_MODEL || "gemini-embedding-001";
+const CHAT_MODEL = process.env.GEMINI_MODEL || "gemini-flash-latest";
 const DIM = 768; // dimension reducida: vectores mas ligeros
 const TOP_K = 4;
 
