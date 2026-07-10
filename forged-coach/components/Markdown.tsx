@@ -41,12 +41,13 @@ export function Markdown({ children }: { children: string }) {
   };
 
   for (const raw of lines) {
-    const line = raw.trimEnd();
-    if (/^#{2,3}\s/.test(line)) {
+    // Tolera que el modelo ponga una vineta antes de un titulo ("* ## Titulo").
+    const line = raw.trimEnd().replace(/^[-*]\s+(?=#{1,3}\s)/, "");
+    if (/^#{1,3}\s/.test(line)) {
       flushList();
       blocks.push(
         <h3 key={key++} className="font-display mt-6 text-xl uppercase tracking-wide text-primary">
-          {line.replace(/^#{2,3}\s/, "")}
+          {line.replace(/^#{1,3}\s/, "")}
         </h3>,
       );
     } else if (/^[-*]\s/.test(line)) {
