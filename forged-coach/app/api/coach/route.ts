@@ -133,7 +133,14 @@ export async function POST(req: NextRequest) {
     const gen = await ai.models.generateContent({
       model: CHAT_MODEL,
       contents: buildUserPrompt(perfil, pregunta, contexto),
-      config: { systemInstruction: SYSTEM, temperature: 0.4, maxOutputTokens: 1000 },
+      config: {
+        systemInstruction: SYSTEM,
+        temperature: 0.4,
+        maxOutputTokens: 2048,
+        // Gemini Flash es un modelo "thinking": sin este limite, el razonamiento
+        // interno consume el presupuesto y la respuesta sale cortada.
+        thinkingConfig: { thinkingBudget: 0 },
+      },
     });
 
     return NextResponse.json({ plan: gen.text ?? "", fuentes });
