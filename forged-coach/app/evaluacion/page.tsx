@@ -81,7 +81,7 @@ export default function EvaluacionPage() {
         muslo_cm: muslo,
       };
       const pred = await predecir({ medidas, sexo, front, side });
-      setPerfil({
+      const nuevoPerfil = {
         banda: pred.banda,
         clase_idx: pred.clase_idx,
         imc: calcularIMC(altura, peso),
@@ -90,7 +90,14 @@ export default function EvaluacionPage() {
         medidas,
         objetivo,
         restricciones,
-      });
+      };
+      setPerfil(nuevoPerfil);
+      // guardamos el perfil para que el chat del Coach (/coach) lo use
+      try {
+        localStorage.setItem("forged_perfil", JSON.stringify(nuevoPerfil));
+      } catch {
+        /* almacenamiento no disponible */
+      }
     } catch (e) {
       setError(
         "No pude cargar el modelo. ¿Está el modelo convertido en /public/model/ " +
@@ -306,6 +313,15 @@ export default function EvaluacionPage() {
                   >
                     {cargandoPlan ? "El Coach está pensando…" : "Generar mi plan"}
                   </button>
+                  <Link
+                    href="/coach"
+                    className="font-display mt-3 block w-full rounded-md bg-primary px-6 py-3 text-center text-sm uppercase tracking-widest text-bg transition hover:bg-primary-deep"
+                  >
+                    Sigue con el Coach →
+                  </Link>
+                  <p className="mt-2 text-center text-xs text-muted">
+                    Chatea para comidas, porciones y tu rutina — con datos reales.
+                  </p>
                 </div>
               </div>
             )}
