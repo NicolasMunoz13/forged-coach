@@ -15,7 +15,6 @@ export const nav = [
   { label: "Programas", href: "#programas" },
   { label: "Nutrición", href: "#nutricion" },
   { label: "Resultados", href: "#resultados" },
-  { label: "Coach IA", href: "#coach" },
 ];
 
 export const hero = {
@@ -164,9 +163,9 @@ export const testimonials: Testimonial[] = [
 ];
 
 export const coach = {
-  eyebrow: "Coach IA · RAG",
+  eyebrow: "Coach IA · datos reales",
   title: "Tu coach no duerme.",
-  body: "Pregúntale sobre técnica, series, déficit calórico o cómo no rendirte un martes a las 6:00. Responde con el conocimiento de FORGED y te cita la fuente. Sin excusas, sin esperar al lunes.",
+  body: "Sube tu foto y tus medidas: estimamos tu banda de IMC en tu propio navegador y el coach arma tu plan de nutrición y entrenamiento con datos reales — calorías y macros de la USDA y una base real de ejercicios. Sin excusas, sin esperar al lunes.",
   examples: [
     "¿Cuántas series por grupo muscular a la semana?",
     "¿Cómo ajusto el déficit si me estanco?",

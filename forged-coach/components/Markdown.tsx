@@ -5,13 +5,20 @@ import type { ReactNode } from "react";
  * Soporta: ## titulos, - listas, **negrita**, > cita, y parrafos.
  */
 function inline(text: string): ReactNode[] {
-  // **negrita**
-  return text.split(/(\*\*[^*]+\*\*)/g).map((part, i) => {
-    if (part.startsWith("**") && part.endsWith("**")) {
+  // **negrita** primero, luego *cursiva* (asi no confunde ** con *)
+  return text.split(/(\*\*[^*]+\*\*|\*[^*]+\*)/g).map((part, i) => {
+    if (part.startsWith("**") && part.endsWith("**") && part.length > 4) {
       return (
         <strong key={i} className="font-semibold text-fg">
           {part.slice(2, -2)}
         </strong>
+      );
+    }
+    if (part.startsWith("*") && part.endsWith("*") && part.length > 2) {
+      return (
+        <em key={i} className="italic">
+          {part.slice(1, -1)}
+        </em>
       );
     }
     return <span key={i}>{part}</span>;

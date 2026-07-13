@@ -1,6 +1,6 @@
+import Link from "next/link";
 import { coach } from "@/lib/content";
 import { Button, Eyebrow, Section } from "./ui";
-import { CoachEmbed } from "./CoachEmbed";
 
 export function CoachSection() {
   return (
@@ -28,8 +28,24 @@ export function CoachSection() {
           </div>
         </div>
 
-        <div>
-          <CoachEmbed height={560} />
+        <div className="flex flex-col justify-center rounded-2xl border border-line bg-surface p-8 text-center">
+          <span className="font-display text-2xl uppercase text-primary">
+            Un plan hecho para tu cuerpo
+          </span>
+          <p className="mt-3 text-muted">
+            El analizador estima tu banda de IMC en tu navegador; el coach responde con
+            <span className="text-fg"> calorías y porciones reales (USDA)</span> y una
+            <span className="text-fg"> base real de ejercicios</span>. Nada de humo.
+          </p>
+          <div className="mt-7 flex flex-col items-center gap-3">
+            <Button href="/evaluacion">Empieza tu evaluación</Button>
+            <Link
+              href="/coach"
+              className="font-display text-sm uppercase tracking-widest text-primary hover:underline"
+            >
+              o habla directo con el coach →
+            </Link>
+          </div>
         </div>
       </div>
     </Section>
