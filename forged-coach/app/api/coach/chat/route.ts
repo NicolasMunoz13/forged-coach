@@ -5,7 +5,7 @@ import type { Perfil } from "@/lib/types";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-export const maxDuration = 45;
+export const maxDuration = 60;
 
 const CHAT_MODEL = process.env.GEMINI_MODEL || "gemini-flash-latest";
 const MAX_STEPS = 4; // limite de rondas de tool-calling por mensaje
@@ -20,6 +20,9 @@ Eres un COACH AGENTE con acceso a datos REALES mediante herramientas:
 - Para ejercicios o planes de entrenamiento: usa la tool "buscar_ejercicios" (base real de ejercicios).
 Cuando des cantidades de comida, calcula la porcion a partir de los datos por 100 g que devuelve la tool.
 Puedes sugerir comidas, porciones en gramos, horarios de comidas y un plan de entrenamiento.
+EFICIENCIA (importante para no tardar): agrupa las llamadas a tools en una sola tanda cuando puedas.
+Para un plan de varios dias, llama a "buscar_ejercicios" como maximo 4-5 veces (los grupos principales)
+y reparte esos ejercicios entre los dias. No repitas busquedas. Se conciso y directo.
 Si la pregunta es medica (dolor, enfermedad, medicacion), deriva a un profesional.
 Termina las respuestas largas con un breve descargo: es una estimacion de fitness, no consejo medico.
 Usa markdown: "## " para titulos de seccion (sin vineta), "- " para listas.`;

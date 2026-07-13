@@ -59,9 +59,22 @@ export default function CoachPage() {
           messages: nuevos.map((m) => ({ role: m.role, content: m.content })),
         }),
       });
-      const data = await res.json();
-      if (!res.ok) {
-        setError(data.error || "Error del coach.");
+      // El servidor puede devolver una pagina de error (no-JSON) si la funcion
+      // tarda demasiado; parseamos con cuidado para no romper el chat.
+      const raw = await res.text();
+      let data: { reply?: string; tools?: string[]; error?: string };
+      try {
+        data = JSON.parse(raw);
+      } catch {
+        data = {
+          error: !res.ok
+            ? `El coach tardó demasiado o falló (${res.status}). Prueba una pregunta más concreta ` +
+              "(por ejemplo, pide una rutina de 3 días en vez de 5)."
+            : "El coach devolvió una respuesta no válida. Inténtalo de nuevo.",
+        };
+      }
+      if (data.error || !res.ok) {
+        setError(data.error || `Error ${res.status}`);
       } else {
         setMessages([
           ...nuevos,
@@ -150,8 +163,10 @@ export default function CoachPage() {
 
           {loading && (
             <div className="flex justify-start">
-              <div className="rounded-2xl rounded-bl-sm border border-line bg-surface px-4 py-3 text-muted">
-                El coach está consultando los datos…
+              <div className="flex items-center gap-1.5 rounded-2xl rounded-bl-sm border border-line bg-surface px-5 py-4">
+                <span className="h-2 w-2 animate-bounce rounded-full bg-primary [animation-delay:-0.3s]" />
+                <span className="h-2 w-2 animate-bounce rounded-full bg-primary [animation-delay:-0.15s]" />
+                <span className="h-2 w-2 animate-bounce rounded-full bg-primary" />
               </div>
             </div>
           )}
