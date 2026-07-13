@@ -7,9 +7,9 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
-// Para el chat con tools usamos un modelo RAPIDO y sin "thinking" (gemini-2.0-flash):
-// las respuestas con tool-calling llegan mucho antes y evitan timeouts (504).
-const CHAT_MODEL = process.env.GEMINI_CHAT_MODEL || "gemini-2.0-flash";
+// Modelo del chat con tools: 'lite' es rapido (menos timeouts) y tiene cuota gratuita
+// generosa. Cambiable por env (GEMINI_CHAT_MODEL) sin tocar codigo.
+const CHAT_MODEL = process.env.GEMINI_CHAT_MODEL || "gemini-flash-lite-latest";
 const MAX_STEPS = 4; // limite de rondas de tool-calling por mensaje
 
 type ChatMsg = { role: "user" | "assistant"; content: string };
@@ -76,6 +76,7 @@ export async function POST(req: NextRequest) {
     systemInstruction: systemPrompt(body.perfil ?? null),
     temperature: 0.5,
     maxOutputTokens: 2048,
+    thinkingConfig: { thinkingBudget: 0 }, // minimiza latencia (modelos con thinking)
     tools: [{ functionDeclarations }],
   };
 
@@ -113,6 +114,18 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ reply: final.text ?? "", tools: toolsUsed });
   } catch (err) {
     const msg = err instanceof Error ? err.message : "Error desconocido";
+    const lower = msg.toLowerCase();
+    if (lower.includes("resource_exhausted") || lower.includes("quota") || lower.includes("429")) {
+      return NextResponse.json(
+        {
+          error:
+            "Se alcanzó el límite gratuito de Gemini para este modelo. Espera un minuto e inténtalo " +
+            "de nuevo, o cambia el modelo con la variable GEMINI_CHAT_MODEL en Vercel " +
+            "(p. ej. gemini-flash-latest).",
+        },
+        { status: 429 },
+      );
+    }
     return NextResponse.json({ error: `Fallo del coach: ${msg}` }, { status: 500 });
   }
 }
