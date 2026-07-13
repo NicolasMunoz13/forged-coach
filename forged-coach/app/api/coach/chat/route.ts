@@ -7,7 +7,9 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
-const CHAT_MODEL = process.env.GEMINI_MODEL || "gemini-flash-latest";
+// Para el chat con tools usamos un modelo RAPIDO y sin "thinking" (gemini-2.0-flash):
+// las respuestas con tool-calling llegan mucho antes y evitan timeouts (504).
+const CHAT_MODEL = process.env.GEMINI_CHAT_MODEL || "gemini-2.0-flash";
 const MAX_STEPS = 4; // limite de rondas de tool-calling por mensaje
 
 type ChatMsg = { role: "user" | "assistant"; content: string };
@@ -74,7 +76,6 @@ export async function POST(req: NextRequest) {
     systemInstruction: systemPrompt(body.perfil ?? null),
     temperature: 0.5,
     maxOutputTokens: 2048,
-    thinkingConfig: { thinkingBudget: 0 },
     tools: [{ functionDeclarations }],
   };
 
