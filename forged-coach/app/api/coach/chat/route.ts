@@ -88,8 +88,11 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ reply: resp.text ?? "", tools: toolsUsed });
       }
 
-      // turno del modelo con las llamadas a tool
-      contents.push({ role: "model", parts: calls.map((c) => ({ functionCall: c })) });
+      // Turno del modelo TAL CUAL lo devuelve: preserva el `thoughtSignature` de
+      // cada functionCall, que los modelos Gemini 3 exigen al reenviar el historial.
+      const modelContent = resp.candidates?.[0]?.content;
+      if (modelContent) contents.push(modelContent);
+      else contents.push({ role: "model", parts: calls.map((c) => ({ functionCall: c })) });
 
       // ejecutamos cada tool y devolvemos el resultado
       const parts = [];
