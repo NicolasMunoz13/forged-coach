@@ -16,6 +16,7 @@ type Exercise = {
   force: string | null;
   mechanic: string | null;
   instructions: string[];
+  imagen?: string | null;
 };
 
 const EXERCISES = exercisesData as Exercise[];
@@ -117,6 +118,7 @@ function buscarEjercicios(musculo: string, equipo?: string) {
     equipo: e.equipment,
     nivel: e.level,
     instrucciones: e.instructions.slice(0, 2),
+    imagen: e.imagen ?? null,
   }));
   return {
     musculo,

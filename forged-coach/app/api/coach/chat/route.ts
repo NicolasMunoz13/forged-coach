@@ -49,6 +49,28 @@ PERFIL DEL USUARIO (estimado por el analizador corporal):
 Personaliza cada respuesta segun este perfil.`;
 }
 
+type Ejercicio = {
+  nombre: string;
+  imagen?: string | null;
+  equipo?: string | null;
+  nivel?: string | null;
+};
+
+/** Deja solo los ejercicios (con imagen) cuyo nombre aparece en la respuesta, sin repetir. */
+function galeria(reply: string, exs: Ejercicio[]): Ejercicio[] {
+  const low = reply.toLowerCase();
+  const seen = new Set<string>();
+  const out: Ejercicio[] = [];
+  for (const e of exs) {
+    if (!e.imagen || !e.nombre || seen.has(e.nombre)) continue;
+    if (low.includes(e.nombre.toLowerCase())) {
+      seen.add(e.nombre);
+      out.push(e);
+    }
+  }
+  return out.slice(0, 12);
+}
+
 export async function POST(req: NextRequest) {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
@@ -85,12 +107,20 @@ export async function POST(req: NextRequest) {
 
   try {
     const toolsUsed: string[] = [];
+    // Ejercicios (con imagen) que devolvieron las tools, para la galeria del chat.
+    const collectedExercises: Ejercicio[] = [];
+
     for (let step = 0; step < MAX_STEPS; step++) {
       const resp = await ai.models.generateContent({ model: CHAT_MODEL, contents, config });
       const calls = resp.functionCalls;
 
       if (!calls || calls.length === 0) {
-        return NextResponse.json({ reply: resp.text ?? "", tools: toolsUsed });
+        const reply = resp.text ?? "";
+        return NextResponse.json({
+          reply,
+          tools: toolsUsed,
+          exercises: galeria(reply, collectedExercises),
+        });
       }
 
       // Turno del modelo TAL CUAL lo devuelve: preserva el `thoughtSignature` de
@@ -104,6 +134,10 @@ export async function POST(req: NextRequest) {
       for (const c of calls) {
         toolsUsed.push(c.name ?? "tool");
         const result = await runTool(c.name ?? "", (c.args ?? {}) as Record<string, unknown>);
+        if (c.name === "buscar_ejercicios") {
+          const ejs = (result as { ejercicios?: Ejercicio[] })?.ejercicios ?? [];
+          for (const ej of ejs) if (ej?.nombre) collectedExercises.push(ej);
+        }
         parts.push({ functionResponse: { name: c.name, response: { result } } });
       }
       contents.push({ role: "user", parts });
@@ -114,7 +148,12 @@ export async function POST(req: NextRequest) {
       contents,
       config: { ...config, tools: undefined },
     });
-    return NextResponse.json({ reply: final.text ?? "", tools: toolsUsed });
+    const reply = final.text ?? "";
+    return NextResponse.json({
+      reply,
+      tools: toolsUsed,
+      exercises: galeria(reply, collectedExercises),
+    });
   } catch (err) {
     const msg = err instanceof Error ? err.message : "Error desconocido";
     const lower = msg.toLowerCase();

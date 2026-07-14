@@ -7,7 +7,8 @@ import { Footer } from "@/components/Footer";
 import { Markdown } from "@/components/Markdown";
 import type { Perfil } from "@/lib/types";
 
-type Msg = { role: "user" | "assistant"; content: string; tools?: string[] };
+type Ej = { nombre: string; imagen?: string | null };
+type Msg = { role: "user" | "assistant"; content: string; tools?: string[]; exercises?: Ej[] };
 
 const SUGERENCIAS = [
   "Dame un plan de comidas para hoy con porciones en gramos",
@@ -62,7 +63,7 @@ export default function CoachPage() {
       // El servidor puede devolver una pagina de error (no-JSON) si la funcion
       // tarda demasiado; parseamos con cuidado para no romper el chat.
       const raw = await res.text();
-      let data: { reply?: string; tools?: string[]; error?: string };
+      let data: { reply?: string; tools?: string[]; error?: string; exercises?: Ej[] };
       try {
         data = JSON.parse(raw);
       } catch {
@@ -78,7 +79,12 @@ export default function CoachPage() {
       } else {
         setMessages([
           ...nuevos,
-          { role: "assistant", content: data.reply || "(sin respuesta)", tools: data.tools },
+          {
+            role: "assistant",
+            content: data.reply || "(sin respuesta)",
+            tools: data.tools,
+            exercises: data.exercises,
+          },
         ]);
       }
     } catch (e) {
@@ -147,6 +153,37 @@ export default function CoachPage() {
               <div key={i} className="flex justify-start">
                 <div className="max-w-[92%] rounded-2xl rounded-bl-sm border border-line bg-surface px-4 py-3">
                   <Markdown>{m.content}</Markdown>
+
+                  {m.exercises && m.exercises.length > 0 && (
+                    <div className="mt-3 border-t border-line pt-3">
+                      <p className="mb-2 text-xs uppercase tracking-wide text-muted">
+                        Demostración de los ejercicios
+                      </p>
+                      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                        {m.exercises.map((ex) => (
+                          <a
+                            key={ex.nombre}
+                            href={ex.imagen ?? undefined}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="group overflow-hidden rounded-lg border border-line bg-bg"
+                          >
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src={ex.imagen ?? ""}
+                              alt={ex.nombre}
+                              loading="lazy"
+                              className="h-28 w-full bg-white object-contain"
+                            />
+                            <span className="block px-2 py-1.5 text-xs text-muted group-hover:text-fg">
+                              {ex.nombre}
+                            </span>
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
                   {m.tools && m.tools.length > 0 && (
                     <div className="mt-2 flex flex-wrap gap-1.5 border-t border-line pt-2">
                       {[...new Set(m.tools)].map((t) => (
